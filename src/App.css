@@ -1,4 +1,16 @@
-.table
-{
-    margin: 100px;
+th {
+    background-color: rgb(64, 64, 64);
+    padding-inline: 5px;
+}
+
+tbody{
+    background-color: #313131;
+}
+
+td {
+    padding-inline: 5px;
+}
+
+select {
+    margin-bottom: 20px;
 }

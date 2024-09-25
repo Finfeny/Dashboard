@@ -15,21 +15,46 @@ app.use(express.json())
 app.use(cors())
 
 app.get("/answers", (req, res) => {
-  answers = connection.query("SELECT * FROM answers", (err, results) => {
+  answer = connection.query("SELECT * FROM answers", (err, results) => {
     res.json({
-      answers: results
+      answer: results
+    })
+  })
+});
+
+app.get("/questions", (req, res) => {
+  answer = connection.query("SELECT * FROM questions", (err, results) => {
+    res.json({
+      answer: results
     })
   })
 });
 
 app.get("/allTables", (req, res) => {
-  answers = connection.query("SHOW TABLES", (err, results) => {
+  tables = connection.query("SHOW TABLES", (err, results) => {
     console.log(results)
+    if (err) {
+      console.log(err, "Xampp might be off")
+    }
     res.json({
-      answers: results
+      tables: results
     })
   })
 });
+
+
+app.post("/table", (req, res) => {
+  // table = Object.entries(req.body)[1][1] for thuderclient
+  console.log("req.body: ", Object.entries(req.body)[0][1])
+  table = Object.entries(req.body)[0][1] // for frontend
+  
+  answer = connection.query("SELECT * FROM ??", [table], (err, results) => {
+    if (err)
+      console.log(err)
+    // console.log("results: ", results)
+    res.json({answer: results})
+  })
+})
 
 app.post("/post", (req, res) => {
   console.log(req.id)
