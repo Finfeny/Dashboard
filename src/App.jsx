@@ -8,7 +8,15 @@ function App() {
   const [error, setError] = useState(null)
   const [isDashLoaded, setDashLoaded] = useState(false)
   const [isTableLoaded, setTableLoaded] = useState(false)
-  const [selectedTable, setSelectedTable] = useState("answers")
+  const [selectedTable, setSelectedTable] = useState(null)
+  
+    useEffect(() => {
+      const address = "http://localhost:4000/allTables"
+      fetch(address)
+      .then(response => response.json())
+        .then(data => {setTable(data); setTableLoaded(true); console.log("table: ", data.tables); setSelectedTable(Object.entries(data.tables[0])[0][1])})
+        .catch(err => {console.log("error: ", err); setError(`failed fetching from ${address}. Is server on?`)})
+    }, [])
   
   useEffect(() => {
     if (!selectedTable) {
@@ -26,14 +34,6 @@ function App() {
       .then(data => {console.log("dashboard", data); setBoard(data); setDashLoaded(true)})
       .catch(err => {console.log("error: ", err); setError(`failed fetching from ${address}. Is server on?`)})
   }, [selectedTable])
-
-  useEffect(() => {
-    const address = "http://localhost:4000/allTables"
-    fetch(address)
-    .then(response => response.json())
-      .then(data => {setTable(data); setTableLoaded(true); console.log("table: ", data.tables)})
-      .catch(err => {console.log("error: ", err); setError(`failed fetching from ${address}. Is server on?`)})
-  }, [])
   return (
     <>
       <div>{error}</div>

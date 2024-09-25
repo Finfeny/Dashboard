@@ -8,13 +8,13 @@ var connection = mysql.createConnection({
   host     : "localhost",
   user     : "root",
   password : "",
-  database : "kysely"
+  database : "mysql"
 });
 
 app.use(express.json())
 app.use(cors())
 
-app.get("/answers", (req, res) => {
+/*app.get("/answers", (req, res) => {
   answer = connection.query("SELECT * FROM answers", (err, results) => {
     res.json({
       answer: results
@@ -29,6 +29,7 @@ app.get("/questions", (req, res) => {
     })
   })
 });
+*/
 
 app.get("/allTables", (req, res) => {
   tables = connection.query("SHOW TABLES", (err, results) => {
@@ -44,7 +45,6 @@ app.get("/allTables", (req, res) => {
 
 
 app.post("/table", (req, res) => {
-  // table = Object.entries(req.body)[1][1] for thuderclient
   console.log("req.body: ", Object.entries(req.body)[0][1])
   table = Object.entries(req.body)[0][1] // for frontend
   
