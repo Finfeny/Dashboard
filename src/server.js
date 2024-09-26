@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   host     : "localhost",
   user     : "root",
   password : "",
-  database : "gambling"
+  database : "information_schema"
 });
 
 app.use(express.json())

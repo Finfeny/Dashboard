@@ -37,9 +37,9 @@ function App() {
 
   useEffect(() => {
     if (isDashLoaded && Object.entries(dashboard.answer)[0] === undefined) {
-      setError("Current table is empty");
-    } else if (Object.entries(dashboard.answer)[0][0] != "0") {
-      console.log("error fetching")
+      setError("Current table is empty")
+    } else if (isDashLoaded && Object.entries(dashboard.answer)[0][0] != "0") {
+      setError("Error fetching: ", JSON.stringify(Object.entries(dashboard.answer)))
     } else {
       setError(null);
     }
@@ -48,8 +48,6 @@ function App() {
   return (
     <>
       <div>{error}</div>
-      {/* <div>{isDashLoaded && JSON.stringify(Object.entries(dashboard.answer)[0])}</div> */}
-      
         Change table: <select value={selectedTable} onChange={event => {setSelectedTable(event.target.value); setDashLoaded(false); setError(null)}}>
           {isTableLoaded && table.tables.map((item, index) => {
             console.log(selectedTable);
