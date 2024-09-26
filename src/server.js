@@ -4,11 +4,11 @@ var cors = require("cors")
 
 var mysql = require("mysql");
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host     : "localhost",
   user     : "root",
   password : "",
-  database : "mysql"
+  database : "information_schema"
 });
 
 app.use(express.json())
@@ -49,10 +49,14 @@ app.post("/table", (req, res) => {
   table = Object.entries(req.body)[0][1] // for frontend
   
   answer = connection.query("SELECT * FROM ??", [table], (err, results) => {
-    if (err)
+    if (err) {
       console.log(err)
-    // console.log("results: ", results)
-    res.json({answer: results})
+      res.json({answer: err})
+    }
+    else {
+      // console.log("results: ", results)
+      res.json({answer: results})
+    }
   })
 })
 
