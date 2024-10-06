@@ -14,3 +14,7 @@ td {
 select {
     margin: 10px;
 }
+
+input {
+    margin-inline: 5px;
+}
