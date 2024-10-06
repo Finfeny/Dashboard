@@ -8,28 +8,26 @@ const connection = mysql.createConnection({
   host     : "localhost",
   user     : "root",
   password : "",
-  database : "information_schema"
+  database : ""
 });
 
 app.use(express.json())
 app.use(cors())
 
-/*app.get("/answers", (req, res) => {
-  answer = connection.query("SELECT * FROM answers", (err, results) => {
-    res.json({
-      answer: results
-    })
-  })
-});
+app.post("/changeDb", (req, res) => {
+  const newDb = req.body.selectedDb
+  console.log("changedb", newDb)
 
-app.get("/questions", (req, res) => {
-  answer = connection.query("SELECT * FROM questions", (err, results) => {
-    res.json({
-      answer: results
-    })
-  })
+  connection.query(`USE \`${newDb}\``, (err) => {
+    if (err) {
+      console.error("Error changing database:", err)
+      return res.status(500).json({ error: 'Failed to change database', err })
+    }
+    connection.config.database = newDb
+    console.log("Switched to database:", newDb)
+    res.json({ database: connection.config.database })
+  });
 });
-*/
 
 app.get("/allTables", (req, res) => {
   tables = connection.query("SHOW TABLES", (err, results) => {
@@ -57,15 +55,6 @@ app.post("/table", (req, res) => {
       // console.log("results: ", results)
       res.json({answer: results})
     }
-  })
-})
-
-app.post("/post", (req, res) => {
-  console.log(req.id)
-
-  answer = connection.query("SELECT answer_title FROM `answers` WHERE id = ?", [req.body.id], (err, results) => {
-    console.log(results)
-    res.json(results)
   })
 })
 
