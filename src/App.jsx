@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import Table from './table'
-import TableSelect from './tableSelect'
-import SubmitForm from './submitForm.jsx'
+import Table from './components/table'
+import TableSelect from './components/tableSelect'
+import SubmitForm from './components/submitForm.jsx'
+import DbSelect from './components/dbSelect.jsx'
 
 
 function App() {
 
+  const [databases, setDatabases] = useState([])
   const [table, setTable] = useState(null)
   const [dashboard, setBoard] = useState({})
   const [error, setError] = useState(null)
@@ -33,7 +35,13 @@ useEffect(() => {
   }
 }, [isDashLoaded, dashboard]);
 
-
+  useEffect(() => {
+    const address = "http://localhost:4000/showDatabases"
+    fetch(address)
+      .then(response => response.json())
+      .then(data => {setDatabases(data)})
+      .catch(err => console.log(err))
+  }, [])
 
   // Change database
   useEffect(() => {
@@ -42,17 +50,22 @@ useEffect(() => {
       method: "POST",
       headers: {"Content-Type": "application/json"}, //sending data in JSON object and not as a string!!!!!!!!
       body: JSON.stringify({selectedDb})})
-      .then(response => {setNewDb(response.json()); console.log("newDb: ", newDb)})
+      .then(response => response.json())
+      .then(data => {
+        if (data.database != undefined)
+          setNewDb(data)
+        console.log("test", data.error)})
       .catch(err => {console.log("error: ", err); setError(`failed changing database to ${selectedDb}. Is server on?`)})
   }, [selectedDb])
 
 
   // Fetch all tables from database 
   useEffect(() => {
+    console.log("newDb: ", newDb) 
     const address = "http://localhost:4000/allTables"
     fetch(address)
     .then(response => response.json())
-      .then(data => {setTable(data); setTableLoaded(true); console.log("table: ", data.tables); setSelectedTable(Object.entries(data.tables[0])[0][1]);})
+      .then(data => {setTable(data); setTableLoaded(true); /*console.log("table: ", data.tables);*/ setSelectedTable(Object.entries(data.tables[0])[0][1]);})
       .catch(err => {console.log(`failed fetching tables from database ${selectedDb} from address ${address}. Is server on?`); console.log("error: ", err)})
   }, [selectedDb, newDb])
   
@@ -78,11 +91,15 @@ useEffect(() => {
 
   // Table rendering
   return (
-    <>
-      <SubmitForm
+    <div className='content'>
+
+      Database
+      <DbSelect
         selectedDb={selectedDb} setSelectedDb={setSelectedDb}
-        dbinputValue={dbinputValue} setDbInputValue={setDbInputValue}/>
-        
+        databases={databases}
+        setDashLoaded={setDashLoaded} setError={setError}/>
+
+      Table
       <TableSelect
         table={table}
         selectedTable={selectedTable} setSelectedTable={setSelectedTable}
@@ -91,8 +108,9 @@ useEffect(() => {
         setError={setError}/>
 
       <div>{error}</div>
+      
       <Table isDashLoaded={isDashLoaded} dashboard={dashboard}/>
-    </>
+    </div>
   )
 }
 export default App

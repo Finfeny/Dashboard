@@ -14,6 +14,16 @@ const connection = mysql.createConnection({
 app.use(express.json())
 app.use(cors())
 
+app.get("/showDatabases", (req, res) => {
+  connection.query("SHOW DATABASES", (err, results) => {
+    if (err) {
+      throw err
+    }
+    console.log("fetched databases:", results)
+    res.json(results)
+  })
+})
+
 app.post("/changeDb", (req, res) => {
   const newDb = req.body.selectedDb
   console.log("changedb", newDb)
